@@ -10,7 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -21,11 +21,11 @@ export class AppGateway
     this.logger.log('Initialized');
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
-    throw new Error('Method not implemented.');
+  handleConnection(client: Socket, ...args: any[]): void {
+    console.log(client);
   }
-  handleDisconnect(client: Socket) {
-    throw new Error('Method not implemented.');
+  handleDisconnect(client: Socket): void {
+    console.log(client);
   }
 
   @SubscribeMessage('msgToServer')
