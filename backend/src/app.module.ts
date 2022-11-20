@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import dotenv = require('dotenv');
 
 import { AppController } from './app.controller';
 
@@ -9,20 +10,21 @@ import { UsersModule } from './modules/users/users.module';
 
 import { SocketGateway } from './socket/socket.gateway';
 
-const { DB_HOSTNAME, DB_PASSWORD, DB_PORT, DB_USERNAME, DB_DATABASE } =
-  process.env;
+import entities from './typeorm';
+
+dotenv.config();
 
 @Module({
   imports: [
     UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: DB_HOSTNAME,
-      port: DB_PORT as unknown as number,
-      username: DB_USERNAME,
-      password: DB_PASSWORD,
-      database: DB_DATABASE,
-      entities: [],
+      host: process.env.DB_HOSTNAME,
+      port: process.env.DB_PORT as unknown as number,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: entities,
       synchronize: true,
     }),
   ],

@@ -1,5 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AppService } from './app.service';
+import { CreateConversationDto } from './dto/CreateConversationDto';
 
 @Controller()
 export class AppController {
@@ -9,4 +17,8 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Post('/upload')
+  @UsePipes(ValidationPipe)
+  createUser(@Body() createUserDto: CreateConversationDto) {}
 }
