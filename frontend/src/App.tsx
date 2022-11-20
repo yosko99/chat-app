@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import io from 'socket.io-client';
 
 import GlobalCSS from './styles/global.css';
+import './styles/bootstrap.min.css';
+import LoginPage from './views/LoginPage';
+import RegisterPage from './views/RegisterPage';
 
 const socket = io('ws://localhost:5000');
 
@@ -23,7 +26,7 @@ function App () {
       socket.emit('connected', prompt('enter name'));
     });
 
-    socket.on('online', (data: {online: [ClientInterface]}) => {
+    socket.on('online', (data: { online: [ClientInterface] }) => {
       setOnlineUsers([...data.online]);
     });
   }, []);
@@ -31,9 +34,10 @@ function App () {
   return (
     <BrowserRouter>
       <GlobalCSS />
-      {onlineUsers!.length > 0 && onlineUsers!.map((user, index: number) => (
-        <h1 key={index}>{user.name}</h1>
-      ))}
+      <Routes>
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
+      </Routes>
     </BrowserRouter>
   );
 }
