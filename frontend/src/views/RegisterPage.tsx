@@ -11,7 +11,7 @@ import CenteredItems from '../styles/CenteredItems';
 const RegisterPage = () => {
   return (
     <CenteredItems>
-      <Form>
+      <Form className='shadow-lg p-5'>
         <p className='fs-1 text-uppercase'>Register to Messaging app</p>
 
         <EmailInput />

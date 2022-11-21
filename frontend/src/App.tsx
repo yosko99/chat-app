@@ -11,15 +11,17 @@ import RegisterPage from './views/RegisterPage';
 const socket = io('ws://localhost:5000');
 
 interface ClientInterface {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }
 
 function App () {
-  const [onlineUsers, setOnlineUsers] = useState<[ClientInterface]>([{
-    id: '',
-    name: ''
-  }]);
+  const [onlineUsers, setOnlineUsers] = useState<[ClientInterface]>([
+    {
+      id: '',
+      name: ''
+    }
+  ]);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -35,8 +37,8 @@ function App () {
     <BrowserRouter>
       <GlobalCSS />
       <Routes>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </BrowserRouter>
   );

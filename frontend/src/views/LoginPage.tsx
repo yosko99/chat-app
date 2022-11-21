@@ -10,7 +10,7 @@ import CenteredItems from '../styles/CenteredItems';
 const LoginPage = () => {
   return (
     <CenteredItems>
-      <Form>
+      <Form className='shadow-lg p-5'>
         <p className='fs-1 text-uppercase'>Login to Messaging App</p>
         <EmailInput />
         <PasswordInput />
