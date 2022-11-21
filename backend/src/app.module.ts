@@ -2,10 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dotenv = require('dotenv');
 
-import { AppController } from './app.controller';
-
-import { AppService } from './app.service';
-
 import { UsersModule } from './modules/users/users.module';
 
 import { SocketGateway } from './socket/socket.gateway';
@@ -28,7 +24,7 @@ dotenv.config();
       synchronize: true,
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService, SocketGateway],
+  controllers: [],
+  providers: [SocketGateway],
 })
 export class AppModule {}

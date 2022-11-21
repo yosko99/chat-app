@@ -10,7 +10,7 @@ const FileInput = () => {
                 name="image"
                 required
                 className="form-control border"
-                accept="image/gif,image/jpeg,image/jpg,image/png" />
+                accept="image/jpeg,image/jpg" />
         </Form.Group>
   );
 };

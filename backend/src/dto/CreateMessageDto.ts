@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateMessageDto {
   @IsNotEmpty()
@@ -6,9 +6,11 @@ export class CreateMessageDto {
   conversationForeignKey: number;
 
   @IsNotEmpty()
+  @IsString()
   message: string;
 
   @IsNotEmpty()
+  @IsString()
   status: string;
 
   @IsNotEmpty()
