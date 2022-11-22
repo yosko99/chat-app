@@ -25,7 +25,7 @@ function App () {
 
   useEffect(() => {
     socket.on('connect', () => {
-      socket.emit('connected', prompt('enter name'));
+      socket.emit('connected');
     });
 
     socket.on('online', (data: { online: [ClientInterface] }) => {

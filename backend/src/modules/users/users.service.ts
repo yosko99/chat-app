@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from 'src/dto/CreateUser.dto';
-import { User } from 'src/typeorm/User';
 import { Repository } from 'typeorm';
+
+import deleteImage from '../../functions/deleteImage';
+
+import { CreateUserDto } from '../../dto/CreateUser.dto';
+
+import { User } from '../../typeorm/User';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +19,14 @@ export class UsersService {
     { email, password, username }: CreateUserDto,
     filename: string,
   ) {
+    const doesExist =
+      (await this.userRepository.findOneBy([{ email }, { username }])) !== null;
+
+    if (doesExist) {
+      deleteImage(filename);
+      return new HttpException('Name or email is already taken', 409);
+    }
+
     const newUser = await this.userRepository.create({
       email,
       password,
@@ -25,6 +37,7 @@ export class UsersService {
     await this.userRepository.save(newUser);
 
     return {
+      message: 'User created successfully',
       user: newUser,
     };
   }

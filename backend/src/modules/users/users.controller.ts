@@ -25,7 +25,6 @@ export class UsersController {
   @UsePipes(ValidationPipe)
   @UseInterceptors(
     FileInterceptor('image', {
-      dest: './uploads/public',
       storage,
       fileFilter: async (req, file, cb) => {
         if (file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
@@ -45,6 +44,6 @@ export class UsersController {
     file: Express.Multer.File,
     @Body() userDto: CreateUserDto,
   ) {
-    this.usersService.createUser(userDto, file.filename);
+    return this.usersService.createUser(userDto, file.filename);
   }
 }
