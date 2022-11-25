@@ -5,6 +5,8 @@ import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import CustomAlert from '../components/utils/CustomAlert';
+import { USERS_ROUTE } from '../constants/apiRoutes.constants';
+import useTokenRedirect from '../hooks/useTokenRedirect';
 import EmailInput from '../inputs/EmailInput';
 import FileInput from '../inputs/FileInput';
 import PasswordInput from '../inputs/PasswordInput';
@@ -12,6 +14,7 @@ import UsernameInput from '../inputs/UsernameInput';
 import CenteredItems from '../styles/CenteredItems';
 
 const RegisterPage = () => {
+  useTokenRedirect();
   const [alert, setAlert] = useState<React.ReactNode>();
   const navigate = useNavigate();
 
@@ -20,25 +23,19 @@ const RegisterPage = () => {
 
     const formData = new FormData(e.target as HTMLFormElement);
 
-    axios
-      .post('/users/', formData)
-      .then((response) => {
-        if (response.data.status === 409) {
-          setAlert(
-            <CustomAlert variant="danger" text={response.data.message} />
-          );
-        } else {
-          setAlert(
-            <CustomAlert variant="success" text={response.data.message} />
-          );
-          setTimeout(() => {
-            navigate('/');
-          }, 1000);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    axios.post(USERS_ROUTE, formData).then((response) => {
+      if (response.data.status !== 200) {
+        setAlert(<CustomAlert variant="danger" text={response.data.message} />);
+      } else {
+        setAlert(
+          <CustomAlert variant="success" text={response.data.message} />
+        );
+        setTimeout(() => {
+          localStorage.setItem('token', response.data.token);
+          navigate('/');
+        }, 1000);
+      }
+    });
   };
 
   return (

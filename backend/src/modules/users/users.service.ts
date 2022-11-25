@@ -40,6 +40,7 @@ export class UsersService {
     return {
       message: 'User created successfully',
       user: newUser,
+      status: 200,
       token: this.generateToken(newUser.email, newUser.password),
     };
   }
@@ -56,7 +57,9 @@ export class UsersService {
     }
 
     return {
+      status: 200,
       token: this.generateToken(email, password),
+      message: 'Logged in successfully',
     };
   }
 
