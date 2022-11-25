@@ -46,4 +46,9 @@ export class UsersController {
   ) {
     return this.usersService.createUser(userDto, file.filename);
   }
+
+  @Post('/login')
+  loginUser(@Body('email') email: string, @Body('password') password: string) {
+    return this.usersService.loginUser(email, password);
+  }
 }

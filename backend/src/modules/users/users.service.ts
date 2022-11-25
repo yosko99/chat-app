@@ -1,6 +1,7 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as jwt from 'jsonwebtoken';
 
 import deleteImage from '../../functions/deleteImage';
 
@@ -39,6 +40,29 @@ export class UsersService {
     return {
       message: 'User created successfully',
       user: newUser,
+      token: this.generateToken(newUser.email, newUser.password),
     };
+  }
+
+  async loginUser(email, password) {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (user === null || user.email !== email) {
+      return new NotFoundException('User with provided email does not exist.');
+    }
+
+    if (user.password !== password) {
+      return new HttpException('Password does not match registered user.', 403);
+    }
+
+    return {
+      token: this.generateToken(email, password),
+    };
+  }
+
+  private generateToken(email: string, password: string) {
+    const token = jwt.sign({ email, password }, process.env.JSONWEBTOKEN_KEY);
+
+    return token;
   }
 }
