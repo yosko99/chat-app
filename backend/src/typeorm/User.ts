@@ -1,11 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn({
-    name: 'user_id',
+  @Column({
+    name: 'client_id',
+    nullable: false,
+    default: '',
   })
-  id: number;
+  id: string;
 
   @Column({
     nullable: false,
@@ -19,7 +21,7 @@ export class User {
   })
   password: string;
 
-  @Column({
+  @PrimaryColumn({
     nullable: false,
     default: '',
   })
@@ -32,6 +34,12 @@ export class User {
     default: () => 'CURRENT_TIMESTAMP',
   })
   lastOnline: Date;
+
+  @Column({
+    nullable: false,
+    default: true,
+  })
+  online: boolean;
 
   @Column({
     nullable: false,

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 import CustomAlert from '../components/utils/CustomAlert';
 import { USERS_ROUTE } from '../constants/apiRoutes.constants';
@@ -16,7 +15,6 @@ import CenteredItems from '../styles/CenteredItems';
 const RegisterPage = () => {
   useTokenRedirect();
   const [alert, setAlert] = useState<React.ReactNode>();
-  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +30,7 @@ const RegisterPage = () => {
         );
         setTimeout(() => {
           localStorage.setItem('token', response.data.token);
-          navigate('/');
+          window.location.href = '/';
         }, 1000);
       }
     });

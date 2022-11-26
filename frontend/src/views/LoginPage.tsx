@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import CustomAlert from '../components/utils/CustomAlert';
 import { LOGIN_ROUTE } from '../constants/apiRoutes.constants';
@@ -23,7 +23,6 @@ const LoginPage = () => {
     password: ''
   });
   const [alert, setAlert] = useState<React.ReactNode>();
-  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +35,7 @@ const LoginPage = () => {
         );
         setTimeout(() => {
           localStorage.setItem('token', response.data.token);
-          navigate('/');
+          window.location.href = '/';
         }, 1000);
       }
     });
