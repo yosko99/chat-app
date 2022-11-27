@@ -4,4 +4,5 @@ export interface UserType {
   username: string;
   img: string;
   lastOnline: string;
+  id: string;
 }

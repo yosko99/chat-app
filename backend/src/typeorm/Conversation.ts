@@ -9,16 +9,16 @@ export class Conversation {
   id: number;
 
   @Column({
-    name: 'user_one',
+    name: 'user_one_email',
     nullable: false,
   })
-  @OneToOne(() => User, (user) => user.id)
-  userOne: number;
+  @OneToOne(() => User, (user) => user.email)
+  userOne: string;
 
   @Column({
-    name: 'user_two',
+    name: 'user_two_email',
     nullable: false,
   })
-  @OneToOne(() => User, (user) => user.id)
-  userTwo: number;
+  @OneToOne(() => User, (user) => user.email)
+  userTwo: string;
 }

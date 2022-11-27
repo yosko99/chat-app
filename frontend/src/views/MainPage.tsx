@@ -16,12 +16,16 @@ const MainPage = () => {
     socket.on('online', (onlineUsers: { online: UserType[] }) => {
       setOnlineUsers(onlineUsers.online);
     });
+
+    socket.on('conversation-open', (conversationID) => {
+      console.log(conversationID);
+    });
   }, []);
 
   return (
     <div className="d-flex w-100 shadow p-2">
       {onlineUsers.map((user, index: number) => (
-        <UserBubble key={index} imageURL={user.img} online={user.online} />
+        <UserBubble key={index} user={user} />
       ))}
     </div>
   );

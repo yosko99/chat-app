@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dotenv = require('dotenv');
+
 import { AppGateway } from './modules/socket/socket.gateway';
 
+import { ConversationModule } from './modules/conversation/conversations.module';
 import { SocketModule } from './modules/socket/socket.gateway.module';
 import { UsersModule } from './modules/users/users.module';
 
 import entities from './typeorm';
+
+import { Conversation } from './typeorm/Conversation';
 import { User } from './typeorm/User';
 
 dotenv.config();
@@ -15,7 +19,8 @@ dotenv.config();
   imports: [
     UsersModule,
     SocketModule,
-    TypeOrmModule.forFeature([User]),
+    ConversationModule,
+    TypeOrmModule.forFeature([User, Conversation]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOSTNAME,
