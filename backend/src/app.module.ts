@@ -6,6 +6,7 @@ import { AppGateway } from './modules/socket/socket.gateway';
 
 import { ConversationModule } from './modules/conversation/conversations.module';
 import { SocketModule } from './modules/socket/socket.gateway.module';
+import { MessagesModule } from './modules/messages/messages.module';
 import { UsersModule } from './modules/users/users.module';
 
 import entities from './typeorm';
@@ -19,6 +20,7 @@ dotenv.config();
   imports: [
     UsersModule,
     SocketModule,
+    MessagesModule,
     ConversationModule,
     TypeOrmModule.forFeature([User, Conversation]),
     TypeOrmModule.forRoot({

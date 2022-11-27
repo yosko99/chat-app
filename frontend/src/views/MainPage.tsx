@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
+import axios from 'axios';
+
 import UserBubble from '../components/UserBubble';
 import { SocketContext } from '../context/SocketContext';
 import { UserType } from '../types/UserType';
@@ -18,7 +20,9 @@ const MainPage = () => {
     });
 
     socket.on('conversation-open', (conversationID) => {
-      console.log(conversationID);
+      axios.get('/messages/' + conversationID).then((response) => {
+        console.log(response);
+      });
     });
   }, []);
 

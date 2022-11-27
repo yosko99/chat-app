@@ -26,7 +26,6 @@ export class AppGateway
     private socketService: SocketService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Conversation)
     private readonly converastionsService: ConversationsService,
   ) {}
   @WebSocketServer() public server: Server;
