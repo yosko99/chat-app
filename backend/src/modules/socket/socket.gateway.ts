@@ -112,6 +112,7 @@ export class AppGateway
 
     this.server.to(client.id).emit('conversation-open', {
       conversation,
+      senderEmail: email,
     });
   }
 

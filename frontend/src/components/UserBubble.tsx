@@ -18,17 +18,29 @@ const UserBubble: FC<Props> = ({ user }) => {
       reciever: user,
       token: localStorage.getItem('token')
     });
+
+    const { id: selectedID } = e.target as HTMLImageElement;
+
+    const userBubbles = document.querySelectorAll('.chatBubble');
+
+    userBubbles.forEach((bubble) => {
+      if (bubble.id === selectedID) {
+        bubble.classList.add('border', 'border-danger', 'border-4');
+      } else {
+        bubble.classList.remove('border', 'border-danger', 'border-4');
+      }
+    });
   };
 
   return (
-    <div
-      className="d-flex mx-1"
-      role={'button'}
-      onClick={(e) => handleClick(e)}
-    >
+    <div className={'d-flex mx-1'}>
       <Image
         src={`/public/${user.img}`}
+        onClick={(e) => handleClick(e)}
+        id={user.id}
         fluid
+        className="chatBubble"
+        role={'button'}
         style={{
           borderRadius: '50%',
           width: '50px',

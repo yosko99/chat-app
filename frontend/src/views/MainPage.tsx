@@ -30,8 +30,14 @@ const MainPage = () => {
       setOnlineUsers(onlineUsers.online);
     });
 
-    socket.on('conversation-open', ({ conversation, clientID }) => {
-      setConversation(conversation);
+    socket.on('conversation-open', ({ conversation, senderEmail }) => {
+      const recieverEmail =
+        conversation.userOne === senderEmail
+          ? conversation.userTwo
+          : senderEmail;
+
+      setConversation({ ...conversation, emailOfReciever: recieverEmail });
+
       axios.get('/messages/' + conversation.id).then((response) => {
         setMessages(response.data);
       });

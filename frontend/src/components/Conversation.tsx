@@ -1,6 +1,6 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 
-import { Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form } from 'react-bootstrap';
 
 import { SocketContext } from '../context/SocketContext';
 import { ConversationType } from '../types/ConversationType';
@@ -22,27 +22,29 @@ const Conversation: FC<Props> = ({ conversation }) => {
     setMessage('');
   };
 
-  if (conversation === undefined) {
-    return <h1>Select conversation</h1>;
-  }
-
   return (
     <div>
-      <Form.Group className="mb-3 d-flex">
-        <Form.Control
-          type="text"
-          className="border"
-          required
-          name="message"
-          placeholder="Type a message"
-          minLength={1}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <Button type="submit" onClick={() => handleMessageSend()}>
-          Send to {conversation.id}
-        </Button>
-      </Form.Group>
+      {conversation.emailOfReciever === undefined
+        ? (
+        <Alert className="text-center">Select a conversation</Alert>
+          )
+        : (
+        <Form.Group className="mb-3 d-flex">
+          <Form.Control
+            type="text"
+            className="border"
+            required
+            name="message"
+            placeholder="Type a message"
+            minLength={1}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <Button type="submit" onClick={() => handleMessageSend()}>
+              Send message to {conversation.emailOfReciever}
+          </Button>
+        </Form.Group>
+          )}
     </div>
   );
 };
