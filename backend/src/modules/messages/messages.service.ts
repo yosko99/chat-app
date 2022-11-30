@@ -12,7 +12,7 @@ export class MessagesService {
 
   async getMessages(conversationID: number) {
     const messages = await this.messagesRepository.findBy({
-      id: conversationID,
+      conversationForeignKey: conversationID,
     });
 
     return messages;

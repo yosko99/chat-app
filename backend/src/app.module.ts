@@ -12,6 +12,7 @@ import { UsersModule } from './modules/users/users.module';
 import entities from './typeorm';
 
 import { Conversation } from './typeorm/Conversation';
+import { Message } from './typeorm/Message';
 import { User } from './typeorm/User';
 
 dotenv.config();
@@ -22,7 +23,7 @@ dotenv.config();
     SocketModule,
     MessagesModule,
     ConversationModule,
-    TypeOrmModule.forFeature([User, Conversation]),
+    TypeOrmModule.forFeature([User, Conversation, Message]),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOSTNAME,

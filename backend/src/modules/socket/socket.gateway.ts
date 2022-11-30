@@ -17,6 +17,7 @@ import { SocketService } from './socket.service';
 
 import { Conversation } from '../../typeorm/Conversation';
 import { User } from '../../typeorm/User';
+import { Message } from 'src/typeorm/Message';
 
 @WebSocketGateway({ cors: true })
 export class AppGateway
@@ -26,6 +27,10 @@ export class AppGateway
     private socketService: SocketService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Conversation)
+    private readonly conversationRepository: Repository<Conversation>,
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
     private readonly converastionsService: ConversationsService,
   ) {}
   @WebSocketServer() public server: Server;
@@ -75,26 +80,29 @@ export class AppGateway
   }
 
   @SubscribeMessage('conversation')
-  async test(client: Socket, data: { token: string; reciever: User }) {
-    const decoded = jwt.verify(data.token, process.env.JSONWEBTOKEN_KEY);
+  async handleConversationOpen(
+    client: Socket,
+    data: { token: string; reciever: User },
+  ) {
+    const { email } = jwt.verify(data.token, process.env.JSONWEBTOKEN_KEY);
 
     const conversationOne =
       await this.converastionsService.getConversationQuery(
-        decoded.email,
+        email,
         data.reciever.email,
       );
 
     const conversationTwo =
       await this.converastionsService.getConversationQuery(
         data.reciever.email,
-        decoded.email,
+        email,
       );
 
     let conversation: Conversation;
 
     if (conversationOne === null && conversationTwo === null) {
       conversation = await this.converastionsService.createConversation(
-        decoded.email,
+        email,
         data.reciever.email,
       );
     } else {
@@ -102,7 +110,44 @@ export class AppGateway
         conversationOne !== null ? conversationOne : conversationTwo;
     }
 
-    this.server.emit('conversation-open', conversation.id);
+    this.server.to(client.id).emit('conversation-open', {
+      conversation,
+    });
+  }
+
+  @SubscribeMessage('send-message')
+  async handleMessageSent(
+    client: Socket,
+    data: { token: string; conversation: Conversation; message: string },
+  ) {
+    const { email: senderEmail } = jwt.verify(
+      data.token,
+      process.env.JSONWEBTOKEN_KEY,
+    );
+
+    const newMessage = await this.messageRepository.create({
+      conversationForeignKey: data.conversation.id,
+      message: data.message,
+      sentBy: senderEmail,
+      status: 'test',
+    });
+
+    await this.messageRepository.save(newMessage);
+
+    const { id: userOneClientID } = await this.userRepository.findOne({
+      where: { email: data.conversation.userOne },
+    });
+
+    const { id: userTwoClientID } = await this.userRepository.findOne({
+      where: { email: data.conversation.userTwo },
+    });
+
+    this.server
+      .to(userOneClientID)
+      .to(userTwoClientID)
+      .emit('message-recieved', {
+        conversationID: data.conversation.id,
+      });
   }
 
   private async getUsers() {

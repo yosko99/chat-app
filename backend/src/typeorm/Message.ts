@@ -11,6 +11,7 @@ export class Message {
 
   @Column({
     name: 'conversation_fk',
+    nullable: false,
   })
   @OneToOne(() => Conversation, (conversation) => conversation.id)
   conversationForeignKey: number;
@@ -36,9 +37,9 @@ export class Message {
   status: string;
 
   @Column({
-    name: 'user_id_fk',
+    name: 'user_email_fk',
     nullable: false,
   })
-  @OneToOne(() => User, (user) => user.id)
-  sentBy: number;
+  @OneToOne(() => User, (user) => user.email)
+  sentBy: string;
 }

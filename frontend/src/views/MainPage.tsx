@@ -2,12 +2,23 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import axios from 'axios';
 
+import Conversation from '../components/Conversation';
+import Message from '../components/Message';
 import UserBubble from '../components/UserBubble';
 import { SocketContext } from '../context/SocketContext';
+import { ConversationType } from '../types/ConversationType';
+import { MessageType } from '../types/MessageType';
 import { UserType } from '../types/UserType';
 
 const MainPage = () => {
   const [onlineUsers, setOnlineUsers] = useState<UserType[]>([]);
+  const [conversation, setConversation] = useState<ConversationType>({
+    id: 0,
+    userOne: '',
+    userTwo: ''
+  });
+  const [messages, setMessages] = useState<MessageType[]>([]);
+
   const socket = useContext(SocketContext);
 
   useEffect(() => {
@@ -19,19 +30,27 @@ const MainPage = () => {
       setOnlineUsers(onlineUsers.online);
     });
 
-    socket.on('conversation-open', (conversationID) => {
-      axios.get('/messages/' + conversationID).then((response) => {
-        console.log(response);
+    socket.on('conversation-open', ({ conversation, clientID }) => {
+      setConversation(conversation);
+      axios.get('/messages/' + conversation.id).then((response) => {
+        setMessages(response.data);
       });
     });
   }, []);
 
   return (
-    <div className="d-flex w-100 shadow p-2">
-      {onlineUsers.map((user, index: number) => (
-        <UserBubble key={index} user={user} />
-      ))}
-    </div>
+    <>
+      <div className="d-flex w-100 shadow p-2">
+        {onlineUsers.map((user, index: number) => (
+          <UserBubble key={index} user={user} />
+        ))}
+      </div>
+      <Conversation conversation={conversation} />
+      <Message
+        openConversationID={conversation.id}
+        importedMessages={messages}
+      />
+    </>
   );
 };
 
