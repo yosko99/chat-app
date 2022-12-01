@@ -52,10 +52,7 @@ const MainPage = () => {
         ))}
       </div>
       <Conversation conversation={conversation} />
-      <Message
-        openConversationID={conversation.id}
-        importedMessages={messages}
-      />
+      <Message conversation={conversation} importedMessages={messages} />
     </>
   );
 };
