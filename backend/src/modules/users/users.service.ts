@@ -2,6 +2,7 @@ import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcryptjs';
 
 import deleteImage from '../../functions/deleteImage';
 
@@ -28,9 +29,11 @@ export class UsersService {
       return new HttpException('Name or email is already taken', 409);
     }
 
+    const hashedPassword = (await bcrypt.hash(password, 10)) as string;
+
     const newUser = await this.userRepository.create({
       email,
-      password,
+      password: hashedPassword,
       username,
       img: filename,
     });
@@ -52,7 +55,9 @@ export class UsersService {
       return new NotFoundException('User with provided email does not exist.');
     }
 
-    if (user.password !== password) {
+    const isPasswordValid = await bcrypt.compareSync(password, user.password);
+
+    if (!isPasswordValid) {
       return new HttpException('Password does not match registered user.', 403);
     }
 
