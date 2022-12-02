@@ -110,6 +110,9 @@ export class AppGateway
         conversationOne !== null ? conversationOne : conversationTwo;
     }
 
+    client.rooms.clear();
+    client.join(conversation.id.toString());
+
     this.server.to(client.id).emit('conversation-open', {
       conversation,
       senderEmail: email,
@@ -135,20 +138,7 @@ export class AppGateway
 
     await this.messageRepository.save(newMessage);
 
-    const { id: userOneClientID } = await this.userRepository.findOne({
-      where: { email: data.conversation.userOne },
-    });
-
-    const { id: userTwoClientID } = await this.userRepository.findOne({
-      where: { email: data.conversation.userTwo },
-    });
-
-    this.server
-      .to(userOneClientID)
-      .to(userTwoClientID)
-      .emit('message-recieved', {
-        conversationID: data.conversation.id,
-      });
+    this.server.to(data.conversation.id.toString()).emit('message-recieved');
   }
 
   private async getUsers() {

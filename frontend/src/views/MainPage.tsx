@@ -1,47 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 import Conversation from '../components/Conversation';
 import Message from '../components/Message';
 import UserBubble from '../components/UserBubble';
-import { SocketContext } from '../context/SocketContext';
-import { ConversationType } from '../types/ConversationType';
-import { MessageType } from '../types/MessageType';
-import { UserType } from '../types/UserType';
+import useOnConnectedSocket from '../hooks/sockets/useOnConnectedSocket';
+import useOnConversationOpenSocket from '../hooks/sockets/useOnConversationOpenSocket';
+import useOnOnlineSocket from '../hooks/sockets/useOnOnlineSocket';
 
 const MainPage = () => {
-  const [onlineUsers, setOnlineUsers] = useState<UserType[]>([]);
-  const [conversation, setConversation] = useState<ConversationType>({
-    id: 0,
-    userOne: '',
-    userTwo: ''
-  });
-  const [messages, setMessages] = useState<MessageType[]>([]);
+  const navigate = useNavigate();
+  useOnConnectedSocket();
 
-  const socket = useContext(SocketContext);
+  const { conversation } = useOnConversationOpenSocket();
+  const { onlineUsers } = useOnOnlineSocket();
 
   useEffect(() => {
-    socket.on('connect', () => {
-      socket.emit('connected', localStorage.getItem('token'));
-    });
-
-    socket.on('online', (onlineUsers: { online: UserType[] }) => {
-      setOnlineUsers(onlineUsers.online);
-    });
-
-    socket.on('conversation-open', ({ conversation, senderEmail }) => {
-      const recieverEmail =
-        conversation.userOne === senderEmail
-          ? conversation.userTwo
-          : senderEmail;
-
-      setConversation({ ...conversation, emailOfReciever: recieverEmail });
-
-      axios.get('/messages/' + conversation.id).then((response) => {
-        setMessages(response.data);
-      });
-    });
+    if (localStorage.getItem('token') === null) {
+      navigate('/login');
+    }
   }, []);
 
   return (
@@ -52,7 +30,7 @@ const MainPage = () => {
         ))}
       </div>
       <Conversation conversation={conversation} />
-      <Message conversation={conversation} importedMessages={messages} />
+      <Message conversation={conversation} />
     </>
   );
 };

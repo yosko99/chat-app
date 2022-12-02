@@ -1,49 +1,29 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 
-import axios from 'axios';
-
-import { SocketContext } from '../context/SocketContext';
+import useOnMessageSocket from '../hooks/sockets/useOnMessageSocket';
 import { ConversationType } from '../types/ConversationType';
-import { MessageType } from '../types/MessageType';
 
 interface Props {
   conversation: ConversationType;
-  importedMessages: MessageType[];
 }
 
-const Message: FC<Props> = ({ conversation, importedMessages }) => {
-  const [messages, setMessages] = useState<MessageType[]>([]);
-
-  const socket = useContext(SocketContext);
-
-  useEffect(() => {
-    socket.on('message-recieved', ({ conversationID }) => {
-      if (conversation.id === conversationID) {
-        axios.get('/messages/' + conversationID).then((response) => {
-          setMessages(response.data);
-        });
-      }
-    });
-  }, [conversation.id]);
-
-  useEffect(() => {
-    setMessages(importedMessages);
-  }, [importedMessages]);
+const Message: FC<Props> = ({ conversation }) => {
+  const { messages } = useOnMessageSocket(conversation.id);
 
   return (
     <>
       {messages.map((message, index: number) =>
-        message.sentBy === conversation.emailOfReciever
+        message.sentBy !== conversation.emailOfReciever
           ? (
-          <div key={index} className='d-flex justify-content-end my-2'>
+          <div key={index} className="d-flex justify-content-end my-2">
             <div className="bg-info text-left p-2 w-25 rounded">
               <p>{message.message}</p>
             </div>
-            <br/>
+            <br />
           </div>
             )
           : (
-          <div key={index} className='d-flex my-2'>
+          <div key={index} className="d-flex my-2">
             <div className="bg-success text-right p-2 w-25 rounded">
               <p>{message.message}</p>
             </div>
