@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Headers } from '@nestjs/common';
 
 import { ConversationsService } from './conversations.service';
 
@@ -7,7 +7,14 @@ export class ConversationsController {
   constructor(private readonly conversationsService: ConversationsService) {}
 
   @Get('/:id')
-  getConversation(@Param('id') id: number) {
-    return this.conversationsService.getConversation(id);
+  getConversationByID(@Param('id') id: number) {
+    return this.conversationsService.getConversationByID(id);
+  }
+
+  @Get()
+  getConversations(@Headers() headers: { authorization: string }) {
+    return this.conversationsService.getConversationsByUser(
+      headers.authorization,
+    );
   }
 }
