@@ -14,17 +14,19 @@ const Conversation: FC<Props> = ({ conversation }) => {
   const socket = useContext(SocketContext);
 
   const handleMessageSend = () => {
-    socket.emit('send-message', {
-      conversation,
-      token: localStorage.getItem('token'),
-      message
-    });
-    setMessage('');
+    if (message.length !== 0) {
+      socket.emit('send-message', {
+        conversation,
+        token: localStorage.getItem('token'),
+        message
+      });
+      setMessage('');
+    }
   };
 
   return (
     <div>
-      {conversation.emailOfReciever === undefined
+      {conversation.recieverEmail === undefined
         ? (
         <Alert className="text-center">Select a conversation</Alert>
           )
@@ -33,15 +35,13 @@ const Conversation: FC<Props> = ({ conversation }) => {
           <Form.Control
             type="text"
             className="border"
-            required
             name="message"
             placeholder="Type a message"
-            minLength={1}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
           <Button type="submit" onClick={() => handleMessageSend()}>
-              Send message to {conversation.emailOfReciever}
+            Send message
           </Button>
         </Form.Group>
           )}

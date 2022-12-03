@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 
+import { Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import Conversation from '../components/Conversation';
-import Message from '../components/Message';
+import MessagesPanel from '../components/panels/MessagesPanel';
 import UserBubble from '../components/UserBubble';
 import useOnConnectedSocket from '../hooks/sockets/useOnConnectedSocket';
 import useOnConversationOpenSocket from '../hooks/sockets/useOnConversationOpenSocket';
@@ -29,8 +30,13 @@ const MainPage = () => {
           <UserBubble key={index} user={user} />
         ))}
       </div>
-      <Conversation conversation={conversation} />
-      <Message conversation={conversation} />
+      <Row className="m-0 p-0">
+        <Col lg={2}>{/* <ConversationsPanel /> */}</Col>
+        <Col lg={10}>
+          <MessagesPanel conversation={conversation} />
+          <Conversation conversation={conversation} />
+        </Col>
+      </Row>
     </>
   );
 };

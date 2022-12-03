@@ -68,6 +68,23 @@ export class UsersService {
     };
   }
 
+  async getUserByEmail(email: string) {
+    if (email === undefined) {
+      return new NotFoundException('Email not provided');
+    }
+
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['email', 'img', 'lastOnline', 'online', 'username'],
+    });
+
+    if (user === null) {
+      return new NotFoundException('User with provided email does not exist.');
+    }
+
+    return user;
+  }
+
   private generateToken(email: string, password: string) {
     const token = jwt.sign({ email, password }, process.env.JSONWEBTOKEN_KEY);
 

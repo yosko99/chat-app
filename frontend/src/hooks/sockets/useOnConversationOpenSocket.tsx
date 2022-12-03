@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { SocketContext } from '../../context/SocketContext';
 import { ConversationType } from '../../types/ConversationType';
@@ -7,20 +7,20 @@ const useOnConversationOpenSocket = () => {
   const [conversation, setConversation] = useState<ConversationType>({
     id: 0,
     userOne: '',
-    userTwo: ''
+    userTwo: '',
+    senderEmail: '',
+    recieverEmail: ''
   });
 
   const socket = useContext(SocketContext);
 
   useEffect(() => {
-    socket.on('conversation-open', ({ conversation, senderEmail }) => {
-      const recieverEmail =
-        conversation.userOne === senderEmail
-          ? conversation.userTwo
-          : conversation.userOne;
-
-      setConversation({ ...conversation, emailOfReciever: recieverEmail });
-    });
+    socket.on(
+      'conversation-open',
+      ({ conversation, senderEmail, recieverEmail }) => {
+        setConversation({ ...conversation, senderEmail, recieverEmail });
+      }
+    );
   }, []);
 
   return { conversation, setConversation };

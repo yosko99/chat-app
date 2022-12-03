@@ -3,6 +3,6 @@ export interface UserType {
   online: boolean;
   username: string;
   img: string;
-  lastOnline: string;
+  lastOnline: Date;
   id: string;
 }

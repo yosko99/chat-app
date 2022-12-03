@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  Get,
+  Param,
   ParseFilePipe,
   Post,
   UploadedFile,
@@ -50,5 +52,10 @@ export class UsersController {
   @Post('/login')
   loginUser(@Body('email') email: string, @Body('password') password: string) {
     return this.usersService.loginUser(email, password);
+  }
+
+  @Get('/:email')
+  getUserByEmail(@Param('email') email: string) {
+    return this.usersService.getUserByEmail(email);
   }
 }
