@@ -2,21 +2,19 @@ import React, { FC, useContext, useState } from 'react';
 
 import { Alert, Button, Form } from 'react-bootstrap';
 
+import { ConversationContext } from '../context/ConversationContext';
 import { SocketContext } from '../context/SocketContext';
-import { ConversationType } from '../types/ConversationType';
 
-interface Props {
-  conversation: ConversationType;
-}
-
-const Conversation: FC<Props> = ({ conversation }) => {
+const Conversation: FC = () => {
+  const conversationContext = useContext(ConversationContext);
   const [message, setMessage] = useState<string>('');
+
   const socket = useContext(SocketContext);
 
   const handleMessageSend = () => {
     if (message.length !== 0) {
       socket.emit('send-message', {
-        conversation,
+        conversation: conversationContext!.conversation,
         token: localStorage.getItem('token'),
         message
       });
@@ -26,10 +24,10 @@ const Conversation: FC<Props> = ({ conversation }) => {
 
   return (
     <div>
-      {conversation.recieverEmail === undefined
+      {conversationContext!.conversation.recieverEmail === undefined
         ? (
         <Alert className="text-center">Select a conversation</Alert>
-          )
+      )
         : (
         <Form.Group className="mb-3 d-flex">
           <Form.Control
@@ -44,7 +42,7 @@ const Conversation: FC<Props> = ({ conversation }) => {
             Send message
           </Button>
         </Form.Group>
-          )}
+      )}
     </div>
   );
 };

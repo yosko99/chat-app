@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import axios from 'axios';
 
-import { ConversationType } from '../../types/ConversationType';
-
 const ConversationsPanel = () => {
-  const [conversations, setConversations] = useState<ConversationType[]>([]);
-
   useEffect(() => {
     axios
       .get('/conversations', {

@@ -1,16 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 
+import axios from 'axios';
+
+import { ConversationContext } from '../../context/ConversationContext';
+import { MessagesContext } from '../../context/MessagesContext';
 import { SocketContext } from '../../context/SocketContext';
-import { ConversationType } from '../../types/ConversationType';
 
 const useOnConversationOpenSocket = () => {
-  const [conversation, setConversation] = useState<ConversationType>({
-    id: 0,
-    userOne: '',
-    userTwo: '',
-    senderEmail: '',
-    recieverEmail: ''
-  });
+  const conversationContext = useContext(ConversationContext);
+  const messagesContext = useContext(MessagesContext);
 
   const socket = useContext(SocketContext);
 
@@ -18,12 +16,17 @@ const useOnConversationOpenSocket = () => {
     socket.on(
       'conversation-open',
       ({ conversation, senderEmail, recieverEmail }) => {
-        setConversation({ ...conversation, senderEmail, recieverEmail });
+        axios.get('/messages/' + conversation.id).then((response) => {
+          conversationContext!.setConversation({
+            ...conversation,
+            senderEmail,
+            recieverEmail
+          });
+          messagesContext!.setMessages(response.data);
+        });
       }
     );
   }, []);
-
-  return { conversation, setConversation };
 };
 
 export default useOnConversationOpenSocket;

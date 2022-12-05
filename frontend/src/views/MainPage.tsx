@@ -12,9 +12,10 @@ import useOnOnlineSocket from '../hooks/sockets/useOnOnlineSocket';
 
 const MainPage = () => {
   const navigate = useNavigate();
-  useOnConnectedSocket();
 
-  const { conversation } = useOnConversationOpenSocket();
+  useOnConnectedSocket();
+  useOnConversationOpenSocket();
+
   const { onlineUsers } = useOnOnlineSocket();
 
   useEffect(() => {
@@ -33,8 +34,8 @@ const MainPage = () => {
       <Row className="m-0 p-0">
         <Col lg={2}>{/* <ConversationsPanel /> */}</Col>
         <Col lg={10}>
-          <MessagesPanel conversation={conversation} />
-          <Conversation conversation={conversation} />
+          <MessagesPanel />
+          <Conversation />
         </Col>
       </Row>
     </>

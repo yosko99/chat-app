@@ -4,35 +4,38 @@ import axios from 'axios';
 import { Image } from 'react-bootstrap';
 import styled from 'styled-components';
 
+import { ConversationContext } from '../../context/ConversationContext';
+import { MessagesContext } from '../../context/MessagesContext';
 import { SocketContext } from '../../context/SocketContext';
-import useOnMessageSocket from '../../hooks/sockets/useOnMessageSocket';
-import { ConversationType } from '../../types/ConversationType';
+import useOnMessageRecievedSocket from '../../hooks/sockets/useOnMessageRecievedSocket';
 import { UserType } from '../../types/UserType';
 import Message from '../Message';
-
-interface Props {
-  conversation: ConversationType;
-}
 
 const MessagesDiv = styled.div`
   height: 85vh;
   overflow: overlay;
 `;
 
-const MessagesPanel: FC<Props> = ({ conversation }) => {
-  const { messages } = useOnMessageSocket(conversation.id);
+const MessagesPanel: FC = () => {
+  const conversationContext = useContext(ConversationContext);
+  const messagesContext = useContext(MessagesContext);
+
   const [reciever, setReciever] = useState<UserType>();
+
+  useOnMessageRecievedSocket(conversationContext!.conversation.id);
 
   const socket = useContext(SocketContext);
 
   const initRecieverData = () => {
-    if (conversation.recieverEmail !== '') {
-      axios.get(`/users/${conversation.recieverEmail}`).then((response) => {
-        const lastOnline = new Date(response.data.lastOnline);
-        response.data.lastOnline = lastOnline;
+    if (conversationContext!.conversation.recieverEmail !== '') {
+      axios
+        .get(`/users/${conversationContext!.conversation.recieverEmail}`)
+        .then((response) => {
+          const lastOnline = new Date(response.data.lastOnline);
+          response.data.lastOnline = lastOnline;
 
-        setReciever(response.data as UserType);
-      });
+          setReciever(response.data as UserType);
+        });
     }
   };
 
@@ -40,7 +43,7 @@ const MessagesPanel: FC<Props> = ({ conversation }) => {
     const messagesDiv = document.getElementById('messages-div');
 
     messagesDiv!.scrollTop = messagesDiv!.scrollHeight;
-  }, [messages.length]);
+  }, [messagesContext!.messages.length]);
 
   useEffect(() => {
     initRecieverData();
@@ -49,7 +52,7 @@ const MessagesPanel: FC<Props> = ({ conversation }) => {
       initRecieverData();
       socket.emit('online', data.online);
     });
-  }, [conversation.recieverEmail]);
+  }, [conversationContext!.conversation.recieverEmail]);
 
   return (
     <MessagesDiv id="messages-div" className="d-flex flex-column">
@@ -79,10 +82,12 @@ const MessagesPanel: FC<Props> = ({ conversation }) => {
           </div>
         </div>
       )}
-      {messages.map((message, index: number) => (
+      {messagesContext!.messages.map((message, index: number) => (
         <Message
           key={index}
-          emailOfReciever={conversation.recieverEmail as string}
+          emailOfReciever={
+            conversationContext!.conversation.recieverEmail as string
+          }
           message={message}
         />
       ))}
