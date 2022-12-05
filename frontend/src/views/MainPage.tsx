@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -6,17 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import Conversation from '../components/Conversation';
 import MessagesPanel from '../components/panels/MessagesPanel';
 import UserBubble from '../components/UserBubble';
+import { OnlineUsersContext } from '../context/OnlineUsersContext';
 import useOnConnectedSocket from '../hooks/sockets/useOnConnectedSocket';
 import useOnConversationOpenSocket from '../hooks/sockets/useOnConversationOpenSocket';
 import useOnOnlineSocket from '../hooks/sockets/useOnOnlineSocket';
 
 const MainPage = () => {
+  const onlineUsersContext = useContext(OnlineUsersContext);
   const navigate = useNavigate();
 
   useOnConnectedSocket();
   useOnConversationOpenSocket();
-
-  const { onlineUsers } = useOnOnlineSocket();
+  useOnOnlineSocket();
 
   useEffect(() => {
     if (localStorage.getItem('token') === null) {
@@ -27,7 +28,7 @@ const MainPage = () => {
   return (
     <>
       <div className="d-flex w-100 shadow p-2">
-        {onlineUsers.map((user, index: number) => (
+        {onlineUsersContext!.onlineUsers.map((user, index: number) => (
           <UserBubble key={index} user={user} />
         ))}
       </div>

@@ -32,6 +32,7 @@ const Conversation: FC = () => {
         <Form.Group className="mb-3 d-flex">
           <Form.Control
             type="text"
+            autoComplete='off'
             className="border"
             name="message"
             placeholder="Type a message"

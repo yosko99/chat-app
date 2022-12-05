@@ -5,11 +5,13 @@ import io from 'socket.io-client';
 
 import { ConversationContext } from './context/ConversationContext';
 import { MessagesContext } from './context/MessagesContext';
+import { OnlineUsersContext } from './context/OnlineUsersContext';
 import { SocketContext } from './context/SocketContext';
 import GlobalCSS from './styles/global.css';
 import './styles/bootstrap.min.css';
 import { ConversationType } from './types/ConversationType';
 import { MessageType } from './types/MessageType';
+import { UserType } from './types/UserType';
 import LoginPage from './views/LoginPage';
 import MainPage from './views/MainPage';
 import RegisterPage from './views/RegisterPage';
@@ -25,21 +27,24 @@ const App = () => {
     senderEmail: '',
     recieverEmail: ''
   });
+  const [onlineUsers, setOnlineUsers] = useState<UserType[]>([]);
 
   return (
     <BrowserRouter>
-      <ConversationContext.Provider value={{ conversation, setConversation }}>
-        <MessagesContext.Provider value={{ messages, setMessages }}>
-          <SocketContext.Provider value={socket}>
-            <GlobalCSS />
-            <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-            </Routes>
-          </SocketContext.Provider>
-        </MessagesContext.Provider>
-      </ConversationContext.Provider>
+      <OnlineUsersContext.Provider value={{ onlineUsers, setOnlineUsers }}>
+        <ConversationContext.Provider value={{ conversation, setConversation }}>
+          <MessagesContext.Provider value={{ messages, setMessages }}>
+            <SocketContext.Provider value={socket}>
+              <GlobalCSS />
+              <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+              </Routes>
+            </SocketContext.Provider>
+          </MessagesContext.Provider>
+        </ConversationContext.Provider>
+      </OnlineUsersContext.Provider>
     </BrowserRouter>
   );
 };

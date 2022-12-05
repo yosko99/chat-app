@@ -12,7 +12,7 @@ export class ConversationsController {
   }
 
   @Get()
-  getConversations(@Headers() headers: { authorization: string }) {
+  getConversationsByUser(@Headers() headers: { authorization: string }) {
     return this.conversationsService.getConversationsByUser(
       headers.authorization,
     );

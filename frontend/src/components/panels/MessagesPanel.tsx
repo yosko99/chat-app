@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import { ConversationContext } from '../../context/ConversationContext';
 import { MessagesContext } from '../../context/MessagesContext';
+import { OnlineUsersContext } from '../../context/OnlineUsersContext';
 import { SocketContext } from '../../context/SocketContext';
 import useOnMessageRecievedSocket from '../../hooks/sockets/useOnMessageRecievedSocket';
 import { UserType } from '../../types/UserType';
@@ -18,6 +19,7 @@ const MessagesDiv = styled.div`
 
 const MessagesPanel: FC = () => {
   const conversationContext = useContext(ConversationContext);
+  const onlineUsersContext = useContext(OnlineUsersContext);
   const messagesContext = useContext(MessagesContext);
 
   const [reciever, setReciever] = useState<UserType>();
@@ -50,7 +52,7 @@ const MessagesPanel: FC = () => {
 
     socket.off('online').on('online', (data) => {
       initRecieverData();
-      socket.emit('online', data.online);
+      onlineUsersContext!.setOnlineUsers(data.online);
     });
   }, [conversationContext!.conversation.recieverEmail]);
 

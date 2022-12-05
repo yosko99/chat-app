@@ -1,20 +1,19 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 
+import { OnlineUsersContext } from '../../context/OnlineUsersContext';
 import { SocketContext } from '../../context/SocketContext';
 import { UserType } from '../../types/UserType';
 
 const useOnOnlineSocket = () => {
-  const [onlineUsers, setOnlineUsers] = useState<UserType[]>([]);
+  const onlineUsersContext = useContext(OnlineUsersContext);
 
   const socket = useContext(SocketContext);
 
   useEffect(() => {
     socket.on('online', (onlineUsers: { online: UserType[] }) => {
-      setOnlineUsers(onlineUsers.online);
+      onlineUsersContext!.setOnlineUsers(onlineUsers.online);
     });
   }, []);
-
-  return { onlineUsers, setOnlineUsers };
 };
 
 export default useOnOnlineSocket;
