@@ -10,22 +10,23 @@ interface Props {
 const Message: FC<Props> = ({ emailOfReciever, message }) => {
   return (
     <>
-      {message.sentBy !== emailOfReciever
-        ? (
-        <div className="d-flex justify-content-end my-1">
-          <div className="bg-info mx-4 badge fs-4 p-3 badge-pill">
-            <p className='m-0'>{message.message}</p>
-          </div>
-          <br />
+      <div
+        className={`d-flex my-1 ${
+          message.sentBy !== emailOfReciever ? 'justify-content-end' : ''
+        }`}
+      >
+        <div
+          className={`${
+            message.sentBy !== emailOfReciever ? 'bg-info' : 'bg-success'
+          } mx-4 badge fs-4 p-3 badge-pill`}
+          style={{ maxWidth: '50%' }}
+        >
+          <p className="m-0" style={{ whiteSpace: 'normal' }}>
+            {message.message}
+          </p>
         </div>
-          )
-        : (
-        <div className="d-flex my-1">
-          <div className="bg-success mx-4 badge fs-4 p-3 badge-pill">
-            <p className='m-0'>{message.message}</p>
-          </div>
-        </div>
-          )}
+        <br />
+      </div>
     </>
   );
 };

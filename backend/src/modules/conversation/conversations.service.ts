@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as jwt from 'jsonwebtoken';
+import { Repository } from 'typeorm';
 
 import { Conversation } from '../../typeorm/Conversation';
 
-import { Repository } from 'typeorm';
+import { ConverastionType } from '../../types/conversations.type';
 
 @Injectable()
 export class ConversationsService {
@@ -49,6 +50,16 @@ export class ConversationsService {
           'Converastion with provided email does not exist.',
         );
       }
+
+      conversations.map((conversation: ConverastionType) => {
+        if (conversation.userOne === email) {
+          conversation.recieverEmail = conversation.userTwo;
+          conversation.senderEmail = email;
+        } else {
+          conversation.senderEmail = conversation.userTwo;
+          conversation.recieverEmail = email;
+        }
+      });
 
       return conversations;
     } catch (error) {

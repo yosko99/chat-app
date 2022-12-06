@@ -4,6 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import Conversation from '../components/Conversation';
+import ConversationsPanel from '../components/panels/ConversationsPanel';
 import MessagesPanel from '../components/panels/MessagesPanel';
 import UserBubble from '../components/UserBubble';
 import { OnlineUsersContext } from '../context/OnlineUsersContext';
@@ -33,7 +34,9 @@ const MainPage = () => {
         ))}
       </div>
       <Row className="m-0 p-0">
-        <Col lg={2}>{/* <ConversationsPanel /> */}</Col>
+        <Col lg={2}>
+          <ConversationsPanel />
+        </Col>
         <Col lg={10}>
           <MessagesPanel />
           <Conversation />

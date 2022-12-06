@@ -9,6 +9,7 @@ import deleteImage from '../../functions/deleteImage';
 import { CreateUserDto } from '../../dto/CreateUser.dto';
 
 import { User } from '../../typeorm/User';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,7 @@ export class UsersService {
       password: hashedPassword,
       username,
       img: filename,
+      id: randomUUID(),
     });
 
     await this.userRepository.save(newUser);
@@ -75,7 +77,7 @@ export class UsersService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      select: ['email', 'img', 'lastOnline', 'online', 'username'],
+      select: ['email', 'img', 'lastOnline', 'online', 'username', 'id'],
     });
 
     if (user === null) {

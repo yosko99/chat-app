@@ -22,28 +22,38 @@ const Conversation: FC = () => {
     }
   };
 
+  const handleInputChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleMessageSend();
+    }
+  };
+
   return (
-    <div>
-      {conversationContext!.conversation.recieverEmail === undefined
+    <div className='mt-5'>
+      {conversationContext?.conversation.id === 0
         ? (
         <Alert className="text-center">Select a conversation</Alert>
-      )
+          )
         : (
         <Form.Group className="mb-3 d-flex">
           <Form.Control
             type="text"
-            autoComplete='off'
+            autoComplete="off"
             className="border"
             name="message"
+            maxLength={255}
             placeholder="Type a message"
             value={message}
+            onKeyDown={(e) =>
+              handleInputChange(e as React.KeyboardEvent<HTMLInputElement>)
+            }
             onChange={(e) => setMessage(e.target.value)}
           />
           <Button type="submit" onClick={() => handleMessageSend()}>
             Send message
           </Button>
         </Form.Group>
-      )}
+          )}
     </div>
   );
 };

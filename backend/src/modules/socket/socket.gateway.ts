@@ -46,7 +46,6 @@ export class AppGateway
 
     for (let i = 0; i < users.length; i++) {
       if (users[i].id === client.id) {
-        users[i].id = '';
         users[i].online = false;
         users[i].lastOnline = new Date();
         break;

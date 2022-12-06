@@ -3,6 +3,7 @@ import React, { FC, useContext } from 'react';
 import { Image } from 'react-bootstrap';
 
 import { SocketContext } from '../context/SocketContext';
+import { showSelectedUser } from '../functions/showSelectedUser';
 import OnlineBubble from '../styles/OnlineBubble.styled';
 import { UserType } from '../types/UserType';
 
@@ -19,17 +20,7 @@ const UserBubble: FC<Props> = ({ user }) => {
       token: localStorage.getItem('token')
     });
 
-    const { id: selectedID } = e.target as HTMLImageElement;
-
-    const userBubbles = document.querySelectorAll('.chatBubble');
-
-    userBubbles.forEach((bubble) => {
-      if (bubble.id === selectedID) {
-        bubble.classList.add('border', 'border-danger', 'border-4');
-      } else {
-        bubble.classList.remove('border', 'border-danger', 'border-4');
-      }
-    });
+    showSelectedUser(e);
   };
 
   return (

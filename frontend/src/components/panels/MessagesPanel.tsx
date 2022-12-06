@@ -59,7 +59,7 @@ const MessagesPanel: FC = () => {
   return (
     <MessagesDiv id="messages-div" className="d-flex flex-column">
       {reciever !== undefined && (
-        <div className="shadow position-fixed bg-primary w-100 text-white rounded d-flex">
+        <div className="shadow bg-primary w-100 text-white rounded d-flex">
           <Image
             src={`/public/${reciever.img}`}
             className="m-2"
