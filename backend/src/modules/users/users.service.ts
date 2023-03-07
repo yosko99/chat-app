@@ -45,7 +45,7 @@ export class UsersService {
     return {
       message: 'User created successfully',
       user: newUser,
-      status: 200,
+      status: 201,
       token: this.generateToken(newUser.email, newUser.password),
     };
   }

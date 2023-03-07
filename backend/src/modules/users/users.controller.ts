@@ -12,6 +12,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { CreateUserDto } from '../../dto/CreateUser.dto';
 
@@ -24,6 +25,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create user' })
+  @ApiResponse({
+    status: 201,
+    description: 'User created successfully',
+  })
+  @ApiResponse({ status: 409, description: 'Name or email is already taken' })
   @UsePipes(ValidationPipe)
   @UseInterceptors(
     FileInterceptor('image', {
@@ -44,7 +51,8 @@ export class UsersController {
       }),
     )
     file: Express.Multer.File,
-    @Body() userDto: CreateUserDto,
+    @Body()
+    userDto: CreateUserDto,
   ) {
     return this.usersService.createUser(userDto, file.filename);
   }

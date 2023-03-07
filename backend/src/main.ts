@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import dotenv = require('dotenv');
 import { join } from 'path';
 
@@ -12,6 +13,16 @@ async function bootstrap() {
 
   app.useStaticAssets(join(__dirname, '..', 'uploads'), { prefix: '/public' });
   app.enableCors();
+
+  const config = new DocumentBuilder()
+    .setTitle('Chat app REST')
+    .setDescription('Chat app endpoints')
+    .setVersion('1.0')
+    .addTag('api')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT);
 }
